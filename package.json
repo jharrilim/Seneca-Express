@@ -1,0 +1,20 @@
+{
+  "name": "josephharrisonlim_comp308lab4",
+  "version": "1.0.0",
+  "description": "comp308 lab 4 microservices",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.18.2",
+    "express": "^4.16.3",
+    "seneca": "^3.4.3",
+    "seneca-web": "2.2.0",
+    "seneca-web-adapter-express": "1.1.1",
+    "type-is": "^1.6.16"
+  }
+}
