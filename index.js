@@ -1,6 +1,5 @@
 const mongoose = require('mongoose');
 const StudentSchema = require("./model/studentSchema");
-const Student = require("./model/student");
 
 mongoose.connect("mongodb://localhost/lab4");
 mongoose.model("Student", StudentSchema);
@@ -9,34 +8,24 @@ const Seneca = require('seneca');
 const SenecaWeb = require('seneca-web');
 const Express = require('express');
 const seneca = Seneca();
+require("./appContext").define(seneca);
 seneca.use(require("./operations.js"));
 seneca.use(SenecaWeb, {
   context: Express(),
   adapter: require('seneca-web-adapter-express')
 });
+
+const StudentController = require("./controller/student");
+
 seneca.ready(() => {
   const app = seneca.export('web/context')();
-  app.get("/api/student", createStudent);
+  app.get("/api/student/create", StudentController.createStudent)
+     .post("/api/student/create", StudentController.createStudent)
+     .get("/api/student/read", StudentController.getStudent)
+     .post("/api/student/read", StudentController.getStudent)
+     .get("/api/student/update", StudentController.updateStudent)
+     .post("/api/student/update", StudentController.updateStudent)
+     .get("/api/student/delete", StudentController.deleteStudent)
+     .post("/api/student/delete", StudentController.deleteStudent);
   app.listen(3000);
 });
-
-function createStudent(req, res, next) {
-    let student;
-    if (req.body) {
-        student = new Student(req.body.name, req.body.studentNumber, req.body.email);
-    } else {
-        student = new Student(req.query.name, req.query.studentNumber, req.query.email);
-    }
-
-    seneca.act({
-        role: 'student',
-        cmd: 'create',
-        name: student.name,
-        studentNumber: student.studentNumber,
-        email: student.email
-    }, function(err, result) {
-        console.log(result);
-        next(err);
-    });
-    res.json(student);
-}
